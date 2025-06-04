@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alharamain - Hajj & Umrah Platform</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&display=swap");
+
+      :root {
+        --primary-color: #4cba8a;
+        --secondary-color: #c79c38;
+        --accent-color: #00a273;
+        --tertiary-color: #b3b883;
+        --text-dark: #2d3748;
+        --text-light: #718096;
+        --bg-light: #f7fafc;
+        --white: #ffffff;
+        --gold: #d4af37;
+        --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-hover: 0 20px 35px -5px rgba(0, 0, 0, 0.15),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --gradient-primary: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--accent-color)
+        );
+        --gradient-gold: linear-gradient(
+          135deg,
+          var(--secondary-color),
+          var(--gold)
+        );
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Cairo", sans-serif;
+        background-color: var(--bg-light);
+        color: var(--text-dark);
+        line-height: 1.7;
+        overflow-x: hidden;
+      }
+
+      body[dir="rtl"] {
+        font-family: "Cairo", sans-serif;
+      }
+
+      body[dir="ltr"] {
+        font-family: "Arial", sans-serif;
+      }
+
+      /* Language Switcher */
+      .language-switcher {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 2000;
+        background: rgba(255, 255, 255, 0.98);
+        border-radius: 25px;
+        padding: 6px 18px;
+        box-shadow: 0 6px 24px -4px rgba(0, 0, 0, 0.13),
+          0 2px 4px -1px rgba(0, 0, 0, 0.07);
+        font-size: 1.2rem;
+      }
+
+      .language-switcher button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-weight: 900;
+        padding: 7px 18px;
+        border-radius: 18px;
+        font-size: 1.1rem;
+        color: var(--primary-color);
+        letter-spacing: 1px;
+        transition: all 0.25s;
+        text-transform: uppercase;
+        outline: none;
+      }
+
+      .language-switcher button.active,
+      .language-switcher button:hover {
+        background: var(--gradient-primary);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(76, 186, 138, 0.13);
+        font-size: 1.15rem;
+        letter-spacing: 1.5px;
+      }
+
+      @media (max-width: 600px) {
+        .language-switcher {
+          top: 10px;
+          left: 10px;
+          padding: 3px 8px;
+          font-size: 1rem;
+        }
+        .language-switcher button {
+          padding: 5px 10px;
+          font-size: 1rem;
+        }
+      }
+
+      /* Enhanced Header */
+      header {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow);
+        padding: 1rem 0;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        transition: all 0.3s ease;
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+
+      .logo {
+        font-family: "Amiri", serif;
+        font-size: 2.2rem;
+        font-weight: 700;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .logo::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: var(--gradient-primary);
+        border-radius: 2px;
+      }
+
+      .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 2rem;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: var(--text-dark);
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .nav-links a::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: var(--primary-color);
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+      }
+
+      .nav-links a:hover {
+        color: var(--primary-color);
+        background: rgba(76, 186, 138, 0.1);
+      }
+
+      .nav-links a:hover::before {
+        width: 80%;
+      }
+
+      .mobile-menu {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+        padding: 0.5rem;
+      }
+
+      .mobile-menu span {
+        width: 25px;
+        height: 3px;
+        background: var(--text-dark);
+        margin: 3px 0;
+        transition: 0.3s;
+        border-radius: 2px;
+      }
+
+      /* Hero Section with Slider */
+      .hero {
+        position: relative;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .slider-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .slide {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+      }
+
+      .slide.active {
+        opacity: 1;
+      }
+
+      .slide::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(76, 186, 138, 0.2),
+          rgba(0, 162, 115, 0.2)
+        );
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 10;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        text-align: center;
+        color: white;
+      }
+
+      .hero h1 {
+        font-family: "Amiri", serif;
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        animation: fadeInUp 1s ease-out;
+        text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .hero-subtitle {
+        font-size: 1.4rem;
+        margin-bottom: 3rem;
+        opacity: 0.9;
+        animation: fadeInUp 1s ease-out 0.2s both;
+      }
+
+      .cta-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        animation: fadeInUp 1s ease-out 0.4s both;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem 2rem;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-primary {
+        background: var(--white);
+        color: var(--primary-color);
+        box-shadow: var(--shadow);
+      }
+
+      .btn-secondary {
+        background: var(--gradient-gold);
+        color: var(--white);
+        border: 2px solid var(--secondary-color);
+      }
+
+      .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-hover);
+      }
+
+      .btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .btn:hover::before {
+        left: 100%;
+      }
+
+      /* Slider Navigation */
+      .slider-nav {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+        z-index: 15;
+      }
+
+      .nav-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .nav-dot.active {
+        background: white;
+        transform: scale(1.2);
+      }
+
+      /* Countdown Timer */
+      .countdown-container {
+        position: absolute;
+        top: 50%;
+        right: 50px;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.95);
+        padding: 2rem;
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        text-align: center;
+        color: var(--text-dark);
+        z-index: 12;
+      }
+
+      .countdown-title {
+        font-family: "Amiri", serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: var(--primary-color);
+      }
+
+      .countdown {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-bottom: 1rem;
+      }
+
+      .time-unit {
+        text-align: center;
+        min-width: 60px;
+      }
+
+      .time-number {
+        display: block;
+        font-size: 2rem;
+        font-weight: 900;
+        color: var(--primary-color);
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .time-label {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-top: 5px;
+      }
+
+      .projects-count {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 2px solid var(--primary-color);
+      }
+
+      .projects-number {
+        font-size: 1.8rem;
+        font-weight: 900;
+        color: var(--primary-color);
+      }
+
+      .projects-label {
+        font-size: 1rem;
+        color: var(--text-dark);
+        margin-top: 5px;
+      }
+
+      /* Enhanced Services Section */
+      .services {
+        padding: 6rem 0;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding-left: 2rem;
+        padding-right: 2rem;
+      }
+
+      .section-title {
+        text-align: center;
+        margin-bottom: 4rem;
+        font-family: "Amiri", serif;
+        font-size: 2.8rem;
+        font-weight: 700;
+        color: var(--text-dark);
+        position: relative;
+      }
+
+      .section-title::after {
+        content: "";
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: var(--gradient-gold);
+        border-radius: 2px;
+      }
+
+      .service-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 2rem;
+      }
+
+      .card {
+        background: var(--white);
+        border-radius: 20px;
+        box-shadow: var(--shadow);
+        padding: 2.5rem;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(76, 186, 138, 0.1);
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--gradient-primary);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+      }
+
+      .card:hover {
+        transform: translateY(-10px);
+        box-shadow: var(--shadow-hover);
+      }
+
+      .card:hover::before {
+        transform: scaleX(1);
+      }
+
+      .card-icon {
+        width: 60px;
+        height: 60px;
+        background: var(--gradient-primary);
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        color: white;
+        font-size: 1.5rem;
+      }
+
+      .card.gold .card-icon {
+        background: var(--gradient-gold);
+      }
+
+      .card h3 {
+        margin-bottom: 1rem;
+        color: var(--text-dark);
+        font-size: 1.4rem;
+        font-weight: 700;
+        font-family: "Amiri", serif;
+      }
+
+      .card p {
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        line-height: 1.6;
+      }
+
+      .card-link {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+      }
+
+      .card-link:hover {
+        gap: 1rem;
+        color: var(--accent-color);
+      }
+
+      .offer-card {
+        background: linear-gradient(135deg, #fff 0%, #f8fff8 100%);
+        border: 2px solid var(--primary-color);
+        position: relative;
+      }
+
+      .offer-badge {
+        position: absolute;
+        top: -10px;
+        right: 20px;
+        background: var(--gradient-gold);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        box-shadow: var(--shadow);
+      }
+
+      .price {
+        font-size: 2rem;
+        font-weight: 900;
+        color: var(--primary-color);
+        margin: 1rem 0;
+        font-family: "Amiri", serif;
+      }
+
+      .features {
+        list-style: none;
+        margin: 1rem 0;
+      }
+
+      .features li {
+        padding: 0.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text-dark);
+      }
+
+      .features li i {
+        color: var(--primary-color);
+        font-size: 0.9rem;
+      }
+
+      /* Stats Section */
+      .stats {
+        background: var(--gradient-gold);
+        color: white;
+        padding: 4rem 0;
+        text-align: center;
+      }
+
+      .stats-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 2rem;
+      }
+
+      .stat-item {
+        padding: 1rem;
+      }
+
+      .stat-number {
+        font-size: 3rem;
+        font-weight: 900;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        font-family: "Amiri", serif;
+      }
+
+      .stat-label {
+        font-size: 1.1rem;
+        opacity: 0.9;
+      }
+
+      /* Agency Section */
+      .agency-section {
+        background: linear-gradient(
+          135deg,
+          var(--tertiary-color),
+          var(--primary-color)
+        );
+        color: white;
+        padding: 6rem 0;
+        text-align: center;
+      }
+
+      .agency-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 2rem;
+      }
+
+      .agency-section h2 {
+        font-family: "Amiri", serif;
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      /* Enhanced Footer */
+      footer {
+        background: var(--text-dark);
+        color: white;
+        padding: 4rem 0 2rem;
+      }
+
+      .footer-content {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 3rem;
+        padding: 0 2rem;
+      }
+
+      .footer-column h3 {
+        margin-bottom: 1.5rem;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--secondary-color);
+        font-family: "Amiri", serif;
+      }
+
+      .footer-column ul {
+        list-style: none;
+      }
+
+      .footer-column ul li {
+        margin-bottom: 1rem;
+      }
+
+      .footer-column ul li a {
+        color: #d1d5db;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .footer-column ul li a:hover {
+        color: var(--secondary-color);
+        padding-right: 0.5rem;
+      }
+
+      .social-links {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .social-link {
+        width: 45px;
+        height: 45px;
+        background: var(--primary-color);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+
+      .social-link:hover {
+        background: var(--secondary-color);
+        transform: translateY(-3px);
+      }
+
+      .copyright {
+        text-align: center;
+        padding-top: 2rem;
+        margin-top: 3rem;
+        border-top: 1px solid #374151;
+        color: #9ca3af;
+      }
+
+      /* Animations */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .animate-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.6s ease;
+      }
+
+      .animate-on-scroll.animate {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Responsive Design */
+      @media (max-width: 1024px) {
+        .countdown-container {
+          position: static;
+          transform: none;
+          margin: 2rem auto;
+          max-width: 400px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .language-switcher {
+          top: 15px;
+          left: 15px;
+          padding: 3px 8px;
+        }
+
+        .navbar {
+          padding: 0 1rem;
+        }
+
+        .nav-links {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          width: 100%;
+          background: white;
+          flex-direction: column;
+          padding: 1rem;
+          box-shadow: var(--shadow);
+        }
+
+        .nav-links.active {
+          display: flex;
+        }
+
+        .mobile-menu {
+          display: flex;
+        }
+
+        .hero {
+          padding: 6rem 0 4rem;
+        }
+
+        .hero h1 {
+          font-size: 2.5rem;
+        }
+
+        .cta-buttons {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .service-cards {
+          grid-template-columns: 1fr;
+          gap: 1.5rem;
+        }
+
+        .stats-container {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1rem;
+        }
+
+        .footer-content {
+          grid-template-columns: 1fr;
+          gap: 2rem;
+        }
+
+        .countdown {
+          gap: 10px;
+        }
+
+        .time-unit {
+          min-width: 45px;
+        }
+
+        .time-number {
+          font-size: 1.5rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .hero h1 {
+          font-size: 2rem;
+        }
+
+        .section-title {
+          font-size: 2rem;
+        }
+
+        .card {
+          padding: 1.5rem;
+        }
+
+        .countdown-container {
+          padding: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body dir="rtl">
+    <header>
+      <nav class="navbar">
+        <div class="logo">
+          <i class="fas fa-kaaba"></i>
+          <span class="logo-text">الحرمين</span>
+        </div>
+        <ul class="nav-links">
+          <li>
+            <a href="#"
+              ><i class="fas fa-home"></i>
+              <span class="nav-text">الرئيسية</span></a
+            >
+          </li>
+          <li>
+            <a href="#"
+              ><i class="fas fa-kaaba"></i>
+              <span class="nav-text">عروض العمرة</span></a
+            >
+          </li>
+          <li>
+            <a href="#"
+              ><i class="fas fa-mountain"></i>
+              <span class="nav-text">برامج الحج</span></a
+            >
+          </li>
+          <li>
+            <a href="#"
+              ><i class="fas fa-building"></i>
+              <span class="nav-text">الوكالات</span></a
+            >
+          </li>
+          <li>
+            <a href="#"
+              ><i class="fas fa-info-circle"></i>
+              <span class="nav-text">دليل الحج والعمرة</span></a
+            >
+          </li>
+          <li>
+            <a href="#"
+              ><i class="fas fa-phone"></i>
+              <span class="nav-text">تواصل معنا</span></a
+            >
+          </li>
+        </ul>
+        <div class="language-switcher">
+          <button id="btnArabic" class="active">العربية</button>
+          <button id="btnEnglish">English</button>
+        </div>
+        <div class="mobile-menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="slider-container">
+        <div
+          class="slide active"
+          style="
+            background-image: url('https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
+          "
+        ></div>
+        <div
+          class="slide"
+          style="
+            background-image: url('https://images.unsplash.com/photo-1564769625392-651b62c96dbb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
+          "
+        ></div>
+        <div
+          class="slide"
+          style="
+            background-image: url('https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
+          "
+        ></div>
+        <div
+          class="slide"
+          style="
+            background-image: url('https://images.unsplash.com/photo-1542816417-0983c9c9ad53?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80');
+          "
+        ></div>
+      </div>
+
+      <div class="hero-content">
+        <h1 class="hero-title">رحلة إيمانية إلى بيت الله الحرام</h1>
+        <p class="hero-subtitle">
+          اكتشف أفضل عروض العمرة والحج من وكالات السفر المعتمدة في الجزائر
+        </p>
+        <div class="cta-buttons">
+          <a href="#" class="btn btn-primary">
+            <i class="fas fa-search"></i>
+            <span class="btn-text">تصفح العروض</span>
+          </a>
+          <a href="#" class="btn btn-secondary">
+            <i class="fas fa-calculator"></i>
+            <span class="btn-text">احسب تكلفة رحلتك</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="slider-nav">
+        <div class="nav-dot active" data-slide="0"></div>
+        <div class="nav-dot" data-slide="1"></div>
+        <div class="nav-dot" data-slide="2"></div>
+        <div class="nav-dot" data-slide="3"></div>
+      </div>
+    </section>
+
+    <section class="stats">
+      <div class="stats-container">
+        <div class="stat-item">
+          <div class="stat-number">2500+</div>
+          <div class="stat-label">حاج ومعتمر</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">150+</div>
+          <div class="stat-label">وكالة معتمدة</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">98%</div>
+          <div class="stat-label">رضا العملاء</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">48</div>
+          <div class="stat-label">ولاية مغطاة</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="services animate-on-scroll">
+      <h2 class="section-title">عروض العمرة المميزة</h2>
+      <div class="service-cards">
+        <div class="card offer-card">
+          <div class="offer-badge">الأكثر طلباً</div>
+          <div class="card-icon">
+            <i class="fas fa-kaaba"></i>
+          </div>
+          <h3>عمرة رجب المبارك</h3>
+          <div class="price">٣٥٠,٠٠٠ دج</div>
+          <ul class="features">
+            <li><i class="fas fa-check"></i> إقامة ٧ ليالي في مكة</li>
+            <li><i class="fas fa-check"></i> فندق ٤ نجوم قريب من الحرم</li>
+            <li><i class="fas fa-check"></i> وجبات مفتوحة</li>
+            <li><i class="fas fa-check"></i> مرشد ديني متخصص</li>
+            <li><i class="fas fa-check"></i> تأشيرة وتأمين شامل</li>
+          </ul>
+          <a href="#" class="card-link">
+            <span class="link-text">احجز الآن</span>
+            <i class="fas fa-arrow-left"></i>
+          </a>
+        </div>
+
+        <div class="card offer-card gold">
+          <div class="offer-badge">عرض ذهبي</div>
+          <div class="card-icon">
+            <i class="fas fa-star"></i>
+          </div>
+          <h3>عمرة رمضان المبارك</h3>
+          <div class="price">٤٨٠,٠٠٠ دج</div>
+          <ul class="features">
+            <li><i class="fas fa-check"></i> إقامة ١٠ ليالي في مكة</li>
+            <li><i class="fas fa-check"></i> فندق ٥ نجوم بجوار الحرم</li>
+            <li><i class="fas fa-check"></i> وجبات فاخرة</li>
+            <li><i class="fas fa-check"></i> مواصلات خاصة</li>
+            <li><i class="fas fa-check"></i> زيارات إضافية للمدينة المنورة</li>
+          </ul>
+          <a href="#" class="card-link">
+            <span class="link-text">احجز الآن</span>
+            <i class="fas fa-arrow-left"></i>
+          </a>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-mosque"></i>
+          </div>
+          <h3>عمرة شعبان</h3>
+          <p>
+            استفد من عروضنا الخاصة لشهر شعبان مع إقامة مريحة وخدمات مميزة تناسب
+            جميع الميزانيات.
+          </p>
+          <a href="#" class="card-link">
+            <span class="link-text">اكتشف العروض</span>
+            <i class="fas fa-arrow-left"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="agency-section animate-on-scroll">
+      <div class="agency-content">
+        <h2>وكالاتنا المعتمدة</h2>
+        <p>
+          نتعاون مع أفضل وكالات السفر المعتمدة من وزارة السياحة الجزائرية
+          والمتخصصة في تنظيم رحلات الحج والعمرة، لضمان رحلة آمنة ومريحة وفق أعلى
+          المعايير.
+        </p>
+      </div>
+    </section>
+
+    <section class="services animate-on-scroll">
+      <h2 class="section-title">برامج الحج</h2>
+      <div class="service-cards">
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-mountain"></i>
+          </div>
+          <h3>حج القران</h3>
+          <p>
+            برنامج متكامل يجمع بين العمرة والحج مع إقامة فندقية مميزة وخدمات
+            متكاملة طوال فترة الرحلة.
+          </p>
+          <a href="#" class="card-link">
+            <span class="link-text">التفاصيل</span>
+            <i class="fas fa-arrow-left"></i>
+          </a>
+        </div>
+
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-kaaba"></i>
+          </div>
+          <h3>حج التمتع</h3>
+          <p>
+            أداء العمرة في أشهر الحج ثم التحلل منها، ثم أداء مناسك الحج من يوم
+            الثامن من ذي الحجة.
+          </p>
+          <a href="#" class="card-link">
+            <span class="link-text">التفاصيل</span>
+            <i class="fas fa-arrow-left"></i>
+          </a>
+        </div>
+
+        <div class="card offer-card">
+          <div class="offer-badge">جديد</div>
+          <div class="card-icon">
+            <i class="fas fa-hotel"></i>
+          </div>
+          <h3>حج VIP</h3>
+          <div class="price">١,٢٠٠,٠٠٠ دج</div>
+          <ul class="features">
+            <li><i class="fas fa-check"></i> إقامة في فنادق ٥ نجوم</li>
+            <li><i class="fas fa-check"></i> مواصلات خاصة فاخرة</li>
+            <li><i class="fas fa-check"></i> مرافقين طبيين</li>
+            <li><i class="fas fa-check"></i> خدمة 24/7</li>
+          </ul>
+          <a href="#" class="card-link">
+            <span class="link-text">احجز الآن</span>
+            <i class="fas fa-arrow-left"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-content">
+        <div class="footer-column">
+          <h3>عن الحرمين</h3>
+          <p>
+            منصة متخصصة في تقديم خدمات الحج والعمرة في الجزائر، نعمل على توفير
+            أفضل العروض والبرامج من وكالات السفر المعتمدة.
+          </p>
+          <div class="social-links">
+            <a href="#" class="social-link"
+              ><i class="fab fa-facebook-f"></i
+            ></a>
+            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+            <a href="#" class="social-link"><i class="fab fa-whatsapp"></i></a>
+          </div>
+        </div>
+
+        <div class="footer-column">
+          <h3>روابط سريعة</h3>
+          <ul>
+            <li>
+              <a href="#"><i class="fas fa-home"></i> <span>الرئيسية</span></a>
+            </li>
+            <li>
+              <a href="#"
+                ><i class="fas fa-kaaba"></i> <span>عروض العمرة</span></a
+              >
+            </li>
+            <li>
+              <a href="#"
+                ><i class="fas fa-mountain"></i> <span>برامج الحج</span></a
+              >
+            </li>
+            <li>
+              <a href="#"
+                ><i class="fas fa-building"></i>
+                <span>الوكالات المعتمدة</span></a
+              >
+            </li>
+            <li>
+              <a href="#"
+                ><i class="fas fa-info-circle"></i>
+                <span>دليل الحج والعمرة</span></a
+              >
+            </li>
+            <li>
+              <a href="#"
+                ><i class="fas fa-phone"></i> <span>تواصل معنا</span></a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h3>خدمة العملاء</h3>
+          <ul>
+            <li>
+              <a href="#"
+                ><i class="fas fa-phone"></i> <span>0550 12 34 56</span></a
+              >
+            </li>
+            <li>
+              <a href="#"
+                ><i class="fas fa-envelope"></i>
+                <span>contact@alharamain.dz</span></a
+              >
+            </li>
+            <li>
+              <a href="#"
+                ><i class="fas fa-map-marker-alt"></i>
+                <span>الجزائر العاصمة، حي المرادية</span></a
+              >
+            </li>
+            <li>
+              <a href="#"
+                ><i class="fas fa-clock"></i>
+                <span>من الأحد إلى الخميس: 8ص - 5م</span></a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h3>النشرة البريدية</h3>
+          <p>
+            اشترك في نشرتنا البريدية ليصلك كل جديد عن عروضنا وبرامجنا الخاصة.
+          </p>
+          <form>
+            <input type="email" placeholder="بريدك الإلكتروني" required />
+            <button type="submit" class="btn btn-primary">
+              <span class="btn-text">اشترك الآن</span>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="copyright">
+        <p>© 2023 الحرمين - جميع الحقوق محفوظة</p>
+      </div>
+    </footer>
+
+    <script>
+      // Language Switching Functionality
+      const arabicBtn = document.getElementById("btnArabic");
+      const englishBtn = document.getElementById("btnEnglish");
+      const body = document.body;
+
+      // Arabic content
+      const arabicContent = {
+        logoText: "الحرمين",
+        navItems: [
+          "الرئيسية",
+          "عروض العمرة",
+          "برامج الحج",
+          "الوكالات",
+          "دليل الحج والعمرة",
+          "تواصل معنا",
+        ],
+        heroTitle: "رحلة إيمانية إلى بيت الله الحرام",
+        heroSubtitle:
+          "اكتشف أفضل عروض العمرة والحج من وكالات السفر المعتمدة في الجزائر",
+        ctaButtons: ["تصفح العروض", "احسب تكلفة رحلتك"],
+        statsLabels: [
+          "حاج ومعتمر",
+          "وكالة معتمدة",
+          "رضا العملاء",
+          "ولاية مغطاة",
+        ],
+        umrahTitle: "عروض العمرة المميزة",
+        hajjTitle: "برامج الحج",
+        agencyTitle: "وكالاتنا المعتمدة",
+        agencyText:
+          "نتعاون مع أفضل وكالات السفر المعتمدة من وزارة السياحة الجزائرية والمتخصصة في تنظيم رحلات الحج والعمرة، لضمان رحلة آمنة ومريحة وفق أعلى المعايير.",
+        umrahOffers: [
+          {
+            title: "عمرة رجب المبارك",
+            price: "٣٥٠,٠٠٠ دج",
+            features: [
+              "إقامة ٧ ليالي في مكة",
+              "فندق ٤ نجوم قريب من الحرم",
+              "وجبات مفتوحة",
+              "مرشد ديني متخصص",
+              "تأشيرة وتأمين شامل",
+            ],
+            cta: "احجز الآن",
+          },
+          {
+            title: "عمرة رمضان المبارك",
+            price: "٤٨٠,٠٠٠ دج",
+            features: [
+              "إقامة ١٠ ليالي في مكة",
+              "فندق ٥ نجوم بجوار الحرم",
+              "وجبات فاخرة",
+              "مواصلات خاصة",
+              "زيارات إضافية للمدينة المنورة",
+            ],
+            cta: "احجز الآن",
+          },
+          {
+            title: "عمرة شعبان",
+            description:
+              "استفد من عروضنا الخاصة لشهر شعبان مع إقامة مريحة وخدمات مميزة تناسب جميع الميزانيات.",
+            cta: "اكتشف العروض",
+          },
+        ],
+        hajjOffers: [
+          {
+            title: "حج القران",
+            description:
+              "برنامج متكامل يجمع بين العمرة والحج مع إقامة فندقية مميزة وخدمات متكاملة طوال فترة الرحلة.",
+            cta: "التفاصيل",
+          },
+          {
+            title: "حج التمتع",
+            description:
+              "أداء العمرة في أشهر الحج ثم التحلل منها، ثم أداء مناسك الحج من يوم الثامن من ذي الحجة.",
+            cta: "التفاصيل",
+          },
+          {
+            title: "حج VIP",
+            price: "١,٢٠٠,٠٠٠ دج",
+            features: [
+              "إقامة في فنادق ٥ نجوم",
+              "مواصلات خاصة فاخرة",
+              "مرافقين طبيين",
+              "خدمة 24/7",
+            ],
+            cta: "احجز الآن",
+          },
+        ],
+        footerTitles: [
+          "عن الحرمين",
+          "روابط سريعة",
+          "خدمة العملاء",
+          "النشرة البريدية",
+        ],
+        footerAbout:
+          "منصة متخصصة في تقديم خدمات الحج والعمرة في الجزائر، نعمل على توفير أفضل العروض والبرامج من وكالات السفر المعتمدة.",
+        newsletterPlaceholder: "بريدك الإلكتروني",
+        newsletterButton: "اشترك الآن",
+        copyright: "© 2023 الحرمين - جميع الحقوق محفوظة",
+      };
+
+      // English content
+      const englishContent = {
+        logoText: "Alharamain",
+        navItems: [
+          "Home",
+          "Umrah Offers",
+          "Hajj Programs",
+          "Agencies",
+          "Hajj & Umrah Guide",
+          "Contact Us",
+        ],
+        heroTitle: "A Spiritual Journey to the Holy House of Allah",
+        heroSubtitle:
+          "Discover the best Umrah and Hajj offers from accredited travel agencies in Algeria",
+        ctaButtons: ["Browse Offers", "Calculate Your Trip Cost"],
+        statsLabels: [
+          "Pilgrims",
+          "Accredited Agencies",
+          "Customer Satisfaction",
+          "Covered States",
+        ],
+        umrahTitle: "Special Umrah Offers",
+        hajjTitle: "Hajj Programs",
+        agencyTitle: "Our Accredited Agencies",
+        agencyText:
+          "We cooperate with the best travel agencies accredited by the Algerian Ministry of Tourism, specialized in organizing Hajj and Umrah trips, to ensure a safe and comfortable journey according to the highest standards.",
+        umrahOffers: [
+          {
+            title: "Rajab Umrah",
+            price: "350,000 DZD",
+            features: [
+              "7 nights stay in Makkah",
+              "4-star hotel near the Haram",
+              "Open buffet meals",
+              "Specialized religious guide",
+              "Visa and comprehensive insurance",
+            ],
+            cta: "Book Now",
+          },
+          {
+            title: "Ramadan Umrah",
+            price: "480,000 DZD",
+            features: [
+              "10 nights stay in Makkah",
+              "5-star hotel near the Haram",
+              "Luxury meals",
+              "Private transportation",
+              "Additional visits to Madinah",
+            ],
+            cta: "Book Now",
+          },
+          {
+            title: "Shaaban Umrah",
+            description:
+              "Take advantage of our special offers for Shaaban with comfortable accommodation and premium services to suit all budgets.",
+            cta: "Discover Offers",
+          },
+        ],
+        hajjOffers: [
+          {
+            title: "Qiran Hajj",
+            description:
+              "A comprehensive program that combines Umrah and Hajj with distinguished hotel accommodation and integrated services throughout the trip.",
+            cta: "Details",
+          },
+          {
+            title: "Tamattu Hajj",
+            description:
+              "Performing Umrah during the Hajj months, then exiting Ihram, then performing Hajj rituals starting from the 8th of Dhul-Hijjah.",
+            cta: "Details",
+          },
+          {
+            title: "VIP Hajj",
+            price: "1,200,000 DZD",
+            features: [
+              "Accommodation in 5-star hotels",
+              "Luxury private transportation",
+              "Medical escorts",
+              "24/7 service",
+            ],
+            cta: "Book Now",
+          },
+        ],
+        footerTitles: [
+          "About Alharamain",
+          "Quick Links",
+          "Customer Service",
+          "Newsletter",
+        ],
+        footerAbout:
+          "A platform specialized in providing Hajj and Umrah services in Algeria, we work to provide the best offers and programs from accredited travel agencies.",
+        newsletterPlaceholder: "Your Email",
+        newsletterButton: "Subscribe Now",
+        copyright: "© 2023 Alharamain - All Rights Reserved",
+      };
+
+      function switchToArabic() {
+        body.setAttribute("dir", "rtl");
+        document.documentElement.lang = "ar";
+
+        // Update logo
+        document.querySelector(".logo-text").textContent =
+          arabicContent.logoText;
+
+        // Update navigation
+        const navItems = document.querySelectorAll(".nav-text");
+        arabicContent.navItems.forEach((item, index) => {
+          navItems[index].textContent = item;
+        });
+
+        // Update hero section
+        document.querySelector(".hero-title").textContent =
+          arabicContent.heroTitle;
+        document.querySelector(".hero-subtitle").textContent =
+          arabicContent.heroSubtitle;
+
+        // Update buttons
+        const ctaButtons = document.querySelectorAll(".btn-text");
+        arabicContent.ctaButtons.forEach((button, index) => {
+          ctaButtons[index].textContent = button;
+        });
+
+        // Update stats
+        const statLabels = document.querySelectorAll(".stat-label");
+        arabicContent.statsLabels.forEach((label, index) => {
+          statLabels[index].textContent = label;
+        });
+
+        // Update services titles
+        document.querySelectorAll(".section-title")[0].textContent =
+          arabicContent.umrahTitle;
+        document.querySelectorAll(".section-title")[1].textContent =
+          arabicContent.hajjTitle;
+
+        // Update agency section
+        document.querySelector(".agency-section h2").textContent =
+          arabicContent.agencyTitle;
+        document.querySelector(".agency-section p").textContent =
+          arabicContent.agencyText;
+
+        // Update Umrah offers
+        const umrahCards = document
+          .querySelectorAll(".service-cards")[0]
+          .querySelectorAll(".card");
+        arabicContent.umrahOffers.forEach((offer, index) => {
+          const card = umrahCards[index];
+          card.querySelector("h3").textContent = offer.title;
+
+          if (offer.price) {
+            card.querySelector(".price").textContent = offer.price;
+          }
+
+          if (offer.features) {
+            const features = card.querySelectorAll(".features li");
+            offer.features.forEach((feature, i) => {
+              // تحديث النص مباشرة بعد <i>
+              if (features[i] && features[i].childNodes.length > 1) {
+                features[i].childNodes[1].nodeValue = " " + feature;
+              }
+            });
+          } else {
+            card.querySelector("p").textContent = offer.description;
+          }
+
+          card.querySelector(".link-text").textContent = offer.cta;
+        });
+
+        // Update Hajj offers
+        const hajjCards = document
+          .querySelectorAll(".service-cards")[1]
+          .querySelectorAll(".card");
+        arabicContent.hajjOffers.forEach((offer, index) => {
+          const card = hajjCards[index];
+          card.querySelector("h3").textContent = offer.title;
+
+          if (offer.price) {
+            card.querySelector(".price").textContent = offer.price;
+          }
+
+          if (offer.features) {
+            const features = card.querySelectorAll(".features li");
+            offer.features.forEach((feature, i) => {
+              if (features[i] && features[i].childNodes.length > 1) {
+                features[i].childNodes[1].nodeValue = " " + feature;
+              }
+            });
+          } else {
+            card.querySelector("p").textContent = offer.description;
+          }
+
+          card.querySelector(".link-text").textContent = offer.cta;
+        });
+
+        // Update footer
+        const footerTitles = document.querySelectorAll(".footer-column h3");
+        arabicContent.footerTitles.forEach((title, index) => {
+          footerTitles[index].textContent = title;
+        });
+
+        document.querySelector(".footer-column p").textContent =
+          arabicContent.footerAbout;
+
+        const footerLinks = document.querySelectorAll(
+          ".footer-column ul li a span"
+        );
+        arabicContent.navItems.forEach((item, index) => {
+          footerLinks[index].textContent = item;
+        });
+
+        document.querySelector('input[type="email"]').placeholder =
+          arabicContent.newsletterPlaceholder;
+        document.querySelector(".footer-column button .btn-text").textContent =
+          arabicContent.newsletterButton;
+
+        document.querySelector(".copyright p").textContent =
+          arabicContent.copyright;
+
+        // Update active button
+        arabicBtn.classList.add("active");
+        englishBtn.classList.remove("active");
+      }
+
+      function switchToEnglish() {
+        body.setAttribute("dir", "ltr");
+        document.documentElement.lang = "en";
+
+        // Update logo
+        document.querySelector(".logo-text").textContent =
+          englishContent.logoText;
+
+        // Update navigation
+        const navItems = document.querySelectorAll(".nav-text");
+        englishContent.navItems.forEach((item, index) => {
+          navItems[index].textContent = item;
+        });
+
+        // Update hero section
+        document.querySelector(".hero-title").textContent =
+          englishContent.heroTitle;
+        document.querySelector(".hero-subtitle").textContent =
+          englishContent.heroSubtitle;
+
+        // Update buttons
+        const ctaButtons = document.querySelectorAll(".btn-text");
+        englishContent.ctaButtons.forEach((button, index) => {
+          ctaButtons[index].textContent = button;
+        });
+
+        // Update stats
+        const statLabels = document.querySelectorAll(".stat-label");
+        englishContent.statsLabels.forEach((label, index) => {
+          statLabels[index].textContent = label;
+        });
+
+        // Update services titles
+        document.querySelectorAll(".section-title")[0].textContent =
+          englishContent.umrahTitle;
+        document.querySelectorAll(".section-title")[1].textContent =
+          englishContent.hajjTitle;
+
+        // Update agency section
+        document.querySelector(".agency-section h2").textContent =
+          englishContent.agencyTitle;
+        document.querySelector(".agency-section p").textContent =
+          englishContent.agencyText;
+
+        // Update Umrah offers
+        const umrahCards = document
+          .querySelectorAll(".service-cards")[0]
+          .querySelectorAll(".card");
+        englishContent.umrahOffers.forEach((offer, index) => {
+          const card = umrahCards[index];
+          card.querySelector("h3").textContent = offer.title;
+
+          if (offer.price) {
+            card.querySelector(".price").textContent = offer.price;
+          }
+
+          if (offer.features) {
+            const features = card.querySelectorAll(".features li");
+            offer.features.forEach((feature, i) => {
+              if (features[i] && features[i].childNodes.length > 1) {
+                features[i].childNodes[1].nodeValue = " " + feature;
+              }
+            });
+          } else {
+            card.querySelector("p").textContent = offer.description;
+          }
+
+          card.querySelector(".link-text").textContent = offer.cta;
+        });
+
+        // Update Hajj offers
+        const hajjCards = document
+          .querySelectorAll(".service-cards")[1]
+          .querySelectorAll(".card");
+        englishContent.hajjOffers.forEach((offer, index) => {
+          const card = hajjCards[index];
+          card.querySelector("h3").textContent = offer.title;
+
+          if (offer.price) {
+            card.querySelector(".price").textContent = offer.price;
+          }
+
+          if (offer.features) {
+            const features = card.querySelectorAll(".features li");
+            offer.features.forEach((feature, i) => {
+              if (features[i] && features[i].childNodes.length > 1) {
+                features[i].childNodes[1].nodeValue = " " + feature;
+              }
+            });
+          } else {
+            card.querySelector("p").textContent = offer.description;
+          }
+
+          card.querySelector(".link-text").textContent = offer.cta;
+        });
+
+        // Update footer
+        const footerTitles = document.querySelectorAll(".footer-column h3");
+        englishContent.footerTitles.forEach((title, index) => {
+          footerTitles[index].textContent = title;
+        });
+
+        document.querySelector(".footer-column p").textContent =
+          englishContent.footerAbout;
+
+        const footerLinks = document.querySelectorAll(
+          ".footer-column ul li a span"
+        );
+        englishContent.navItems.forEach((item, index) => {
+          footerLinks[index].textContent = item;
+        });
+
+        document.querySelector('input[type="email"]').placeholder =
+          englishContent.newsletterPlaceholder;
+        document.querySelector(".footer-column button .btn-text").textContent =
+          englishContent.newsletterButton;
+
+        document.querySelector(".copyright p").textContent =
+          englishContent.copyright;
+
+        // Update active button
+        englishBtn.classList.add("active");
+        arabicBtn.classList.remove("active");
+      }
+
+      arabicBtn.addEventListener("click", switchToArabic);
+      englishBtn.addEventListener("click", switchToEnglish);
+
+      // Mobile Menu Toggle
+      const mobileMenu = document.querySelector(".mobile-menu");
+      const navLinks = document.querySelector(".nav-links");
+
+      mobileMenu.addEventListener("click", () => {
+        navLinks.classList.toggle("active");
+        mobileMenu.classList.toggle("active");
+      });
+
+      // Slider Functionality
+      const slides = document.querySelectorAll(".slide");
+      const dots = document.querySelectorAll(".nav-dot");
+      let currentSlide = 0;
+
+      function showSlide(index) {
+        slides.forEach((slide) => slide.classList.remove("active"));
+        dots.forEach((dot) => dot.classList.remove("active"));
+
+        slides[index].classList.add("active");
+        dots[index].classList.add("active");
+        currentSlide = index;
+      }
+
+      function nextSlide() {
+        let next = currentSlide + 1;
+        if (next >= slides.length) next = 0;
+        showSlide(next);
+      }
+
+      dots.forEach((dot, index) => {
+        dot.addEventListener("click", () => showSlide(index));
+      });
+
+      setInterval(nextSlide, 5000);
+
+      // Countdown Timer
+      function updateCountdown() {
+        const now = new Date();
+        const nextYear = new Date(now.getFullYear() + 1, 0, 1);
+        const diff = nextYear - now;
+
+        const months = Math.floor(diff / (1000 * 60 * 60 * 24 * 30));
+        const days = Math.floor(
+          (diff % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24)
+        );
+        const hours = Math.floor(
+          (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+        document.getElementById("months").textContent = String(months).padStart(
+          2,
+          "0"
+        );
+        document.getElementById("days").textContent = String(days).padStart(
+          2,
+          "0"
+        );
+        document.getElementById("hours").textContent = String(hours).padStart(
+          2,
+          "0"
+        );
+        document.getElementById("minutes").textContent = String(
+          minutes
+        ).padStart(2, "0");
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 60000);
+
+      // Scroll Animation
+      function animateOnScroll() {
+        const elements = document.querySelectorAll(".animate-on-scroll");
+
+        elements.forEach((element) => {
+          const elementPosition = element.getBoundingClientRect().top;
+          const windowHeight = window.innerHeight;
+
+          if (elementPosition < windowHeight - 100) {
+            element.classList.add("animate");
+          }
+        });
+      }
+
+      window.addEventListener("scroll", animateOnScroll);
+      window.addEventListener("load", animateOnScroll);
+    </script>
+  </body>
+</html>
