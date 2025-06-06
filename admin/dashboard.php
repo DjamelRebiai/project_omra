@@ -29,7 +29,7 @@ require_once $checkAuthPath;
 
 require_once __DIR__ . '/../includes/db.php';
 
-// جلب الإحصائيات من قاعدة البيانات
+//ff جلب الإحصائيات من قاعدة البيانات
 try {
     // عدد الوكالات
     $stmt = $pdo->query("SELECT COUNT(*) FROM agencies");
