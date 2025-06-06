@@ -1,0 +1,23 @@
+RewriteEngine On
+RewriteBase /version1/
+
+# إعادة توجيه كل الطلبات إلى المجلد الصحيح
+# Admin Section Rules
+RewriteRule ^admin/?$ admin/views/auth/login.php [L]
+RewriteRule ^admin/dashboard/?$ admin/dashboard.php [L]
+RewriteRule ^admin/logout/?$ admin/logout.php [L]
+
+# Redirect unauthenticated access to admin area to login
+RewriteCond %{REQUEST_URI} ^/version1/admin/
+RewriteCond %{REQUEST_URI} !^/version1/admin/views/auth/login\.php
+RewriteCond %{REQUEST_URI} !^/version1/admin/logout\.php
+RewriteCond %{REQUEST_URI} !.*\.(css|js|jpg|png)$
+RewriteCond %{SESSION:admin_id} !^[0-9]+$
+RewriteRule ^ admin/views/auth/login.php [L,R]
+
+# Check for existing files and directories
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Route remaining requests to index.php
+RewriteRule ^(.*)$ index.php [L]

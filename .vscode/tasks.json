@@ -1,0 +1,13 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Start XAMPP Apache Server",
+            "type": "shell",
+            "command": "C:/xampp/xampp_start.exe",
+            "problemMatcher": [],
+            "group": "build",
+            "detail": "تشغيل خادم Apache عبر XAMPP."
+        }
+    ]
+}
